@@ -1,2 +1,2 @@
-﻿testing values ${value1}, adding another ${value2}
-${value3}
+﻿testing values ${key1}, adding another ${key2}
+${key3}
