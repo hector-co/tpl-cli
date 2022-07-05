@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Replacer": {
+      "commandName": "Project",
+      "commandLineArgs": "sample.yaml"
+    }
+  }
+}
