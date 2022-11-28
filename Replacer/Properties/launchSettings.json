@@ -2,7 +2,7 @@
   "profiles": {
     "Replacer": {
       "commandName": "Project",
-      "commandLineArgs": "-t D:\\Users\\Hector\\source\\project-templates\\tpl-core"
+      "commandLineArgs": ""
     }
   }
 }

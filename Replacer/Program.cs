@@ -7,7 +7,7 @@ var deserializer = new DeserializerBuilder()
     .WithNamingConvention(CamelCaseNamingConvention.Instance)
     .Build();
 
-var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText("appsettings.yaml"));
+var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
 
 var templateFolder = SelectTemplate(settings["templatesFolder"]);
 
@@ -20,7 +20,7 @@ if (parserResult.Errors.Any())
 
 var parsedArgs = parserResult.Value;
 
-var definition = deserializer.Deserialize<Definition>(File.ReadAllText(parsedArgs.KeysFile));
+var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{templateFolder}\\{parsedArgs.KeysFile}"));
 
 var mapping = definition.Keys.ToDictionary(k => k, k => k);
 do
