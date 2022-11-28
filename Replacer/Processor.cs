@@ -5,12 +5,17 @@ public class Processor
     private readonly string _path;
     private readonly Dictionary<string, string> _mappings;
     private string _outputPath;
+    private readonly List<string> _excludedFiles;
+    private readonly List<string> _excludedFolders;
 
-    public Processor(string path, Dictionary<string, string> mappings, string outputPath = ".")
+    public Processor(string path, Dictionary<string, string> mappings, string outputPath = ".", List<string>? excludedFiles = null,
+        List<string>? excludedFolders = null)
     {
         _path = path;
         _mappings = mappings;
         _outputPath = outputPath;
+        _excludedFiles = excludedFiles ?? new();
+        _excludedFolders = excludedFolders ?? new();
 
         Process();
     }
@@ -26,7 +31,11 @@ public class Processor
             _outputPath = Path.Combine(parentFolder!, replacedFolderName);
         }
 
-        var files = Directory.GetFiles(_path, "*.*", SearchOption.AllDirectories);
+        var files = Directory.EnumerateFiles(_path, "*.*", SearchOption.AllDirectories)
+            .Where(f => !_excludedFiles.Contains(Path.GetFileName(f)!, StringComparer.InvariantCultureIgnoreCase))
+            .Where(f => !_excludedFolders.Contains(Directory.GetParent(f)!.Name, StringComparer.InvariantCultureIgnoreCase))
+            .Where(f => _excludedFolders.All(folder => !f.Contains($"\\{folder}\\")));
+
         foreach (var file in files)
         {
             var fileContent = File.ReadAllText(file);

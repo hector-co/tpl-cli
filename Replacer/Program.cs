@@ -10,9 +10,9 @@ if (parserResult.Errors.Any())
 var parsedArgs = parserResult.Value;
 
 var deserializer = new DeserializerBuilder()
-    .WithNamingConvention(UnderscoredNamingConvention.Instance)
+    .WithNamingConvention(CamelCaseNamingConvention.Instance)
     .Build();
 
 var definition = deserializer.Deserialize<Definition>(File.ReadAllText(parsedArgs.KeysFile));
 
-_ = new Processor(parsedArgs.TemplateFolder, definition.Mapping, parsedArgs.OutputFolder);
+_ = new Processor(parsedArgs.TemplateFolder, definition.Mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
