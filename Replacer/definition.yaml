@@ -1,0 +1,8 @@
+﻿mapping:
+  key1: value1
+  key2: value2
+  key3: |-
+      line1
+      line2
+      line3
+  __NAME__: ReplacedCore

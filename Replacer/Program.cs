@@ -13,6 +13,6 @@ var deserializer = new DeserializerBuilder()
     .WithNamingConvention(UnderscoredNamingConvention.Instance)
     .Build();
 
-var mappings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(parsedArgs.KeysFile));
+var definition = deserializer.Deserialize<Definition>(File.ReadAllText(parsedArgs.KeysFile));
 
-_ = new Processor(parsedArgs.TemplateFolder, mappings, parsedArgs.OutputFolder);
+_ = new Processor(parsedArgs.TemplateFolder, definition.Mapping, parsedArgs.OutputFolder);
