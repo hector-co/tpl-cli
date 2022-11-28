@@ -2,7 +2,7 @@
   "profiles": {
     "Replacer": {
       "commandName": "Project",
-      "commandLineArgs": "-f sample.yaml"
+      "commandLineArgs": "-t D:\\Users\\Hector\\source\\tpl-core"
     }
   }
 }

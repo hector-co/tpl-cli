@@ -4,24 +4,24 @@ namespace Replacer
 {
     internal class ArgOptions
     {
-        [Option('f', "file", Required = true)]
-        public string ValuesFile { get; set; } = string.Empty;
+        [Option('f', "file", Default = "./keys.yaml")]
+        public string KeysFile { get; set; } = "./keys.yaml";
 
-        [Option('o', "output-file")]
-        public string OutputFile { get; set; } = string.Empty;
+        //[Option('e', "output-file-extension", Default = "output")]
+        //public string OutputFileExtension { get; set; } = "output";
 
-        [Option('e', "output-file-extension", Default = "output")]
-        public string OutputFileExtension { get; set; } = "output";
+        [Option('t', "template-folder", Required = true)]
+        public string TemplateFolder { get; set; } = string.Empty;
 
-        [Option('t', "template-file", Default = "template.tpl")]
-        public string TemplateFile { get; set; } = "template.tpl";
+        [Option('o', "output-folder", Default = ".")]
+        public string OutputFolder { get; set; } = ".";
 
-        public void Adjust()
-        {
-            var processingName = Path.GetFileNameWithoutExtension(ValuesFile);
+        //public void Adjust()
+        //{
+        //    var processingName = Path.GetFileNameWithoutExtension(KeysFile);
 
-            if (string.IsNullOrEmpty(OutputFile))
-                OutputFile = $@"{processingName}.{OutputFileExtension}";
-        }
+        //    if (string.IsNullOrEmpty(OutputFolder))
+        //        OutputFolder = $@"{processingName}.{OutputFileExtension}";
+        //}
     }
 }
