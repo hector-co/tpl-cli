@@ -4,7 +4,7 @@
 mapping:
   Template: ReplacedCore
 excludedFiles:
-  - .gitignore
+  - tpl-def.yaml
 excludedFolders:
   - .git
   - bin

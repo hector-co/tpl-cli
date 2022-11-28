@@ -14,7 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="definition.yaml">
+    <None Update="appsettings.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="tpl-def.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

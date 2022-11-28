@@ -4,11 +4,8 @@ namespace Replacer
 {
     internal class ArgOptions
     {
-        [Option('f', "file", Default = "./definition.yaml")]
-        public string KeysFile { get; set; } = "./definition.yaml";
-
-        [Option('t', "template-folder", Required = true)]
-        public string TemplateFolder { get; set; } = string.Empty;
+        [Option('f', "file", Default = "./tpl-def.yaml")]
+        public string KeysFile { get; set; } = "./tpl-def.yaml";
 
         [Option('o', "output-folder", Default = ".")]
         public string OutputFolder { get; set; } = ".";

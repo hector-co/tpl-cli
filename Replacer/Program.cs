@@ -3,6 +3,14 @@ using Replacer;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
+var deserializer = new DeserializerBuilder()
+    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+    .Build();
+
+var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText("appsettings.yaml"));
+
+var templateFolder = SelectTemplate(settings["templatesFolder"]);
+
 var parserResult = Parser.Default.ParseArguments<ArgOptions>(args);
 if (parserResult.Errors.Any())
 {
@@ -11,10 +19,6 @@ if (parserResult.Errors.Any())
 }
 
 var parsedArgs = parserResult.Value;
-
-var deserializer = new DeserializerBuilder()
-    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-    .Build();
 
 var definition = deserializer.Deserialize<Definition>(File.ReadAllText(parsedArgs.KeysFile));
 
@@ -28,9 +32,38 @@ do
 Console.Clear();
 Console.WriteLine("Processing files...");
 
-_ = new Processor(parsedArgs.TemplateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
+_ = new Processor(templateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
 
 Console.WriteLine("Completed.");
+
+static string SelectTemplate(string templatesFolderContainer, bool clear = true)
+{
+    if (clear) Console.Clear();
+    Console.WriteLine($"Select template:");
+    var dirs = Directory.EnumerateDirectories(templatesFolderContainer);
+    var templateFolders = new List<string>();
+    var index = 1;
+    foreach (var dir in dirs)
+    {
+        if (File.Exists(Path.Combine(dir, "tpl-def.yaml")))
+        {
+            templateFolders.Add(dir);
+            Console.WriteLine($"  {index}) {Path.GetFileName(dir)}");
+            index++;
+        }
+    }
+    Console.Write("> ");
+    var selectedInput = Console.ReadLine() ?? string.Empty;
+    if (!int.TryParse(selectedInput, out var selected) || selected < 1 || selected > templateFolders.Count)
+    {
+        Console.Clear();
+        Console.WriteLine("Invalid selection.");
+        return SelectTemplate(templatesFolderContainer, false);
+    }
+
+    return templateFolders[selected - 1];
+}
+
 static Dictionary<string, string> ReadKeyValues(List<string> keys, Dictionary<string, string> defaultValues)
 {
     Console.Clear();
