@@ -3,24 +3,33 @@ using Replacer;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-var deserializer = new DeserializerBuilder()
-    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-    .Build();
-
-var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
-
-var templateFolder = SelectTemplate(settings["templatesFolder"]);
+const string TplDefFile = "tpl-def.yaml";
 
 var parserResult = Parser.Default.ParseArguments<ArgOptions>(args);
 if (parserResult.Errors.Any())
 {
-    Console.ReadKey();
     return;
 }
 
+var deserializer = new DeserializerBuilder()
+    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+    .Build();
+
 var parsedArgs = parserResult.Value;
 
-var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{templateFolder}\\{parsedArgs.KeysFile}"));
+if (string.IsNullOrEmpty(parsedArgs.TemplateFolder) && string.IsNullOrEmpty(parsedArgs.TemplateFolder))
+{
+    var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
+
+    parsedArgs.TemplatesParentFolder = settings["templatesFolder"];
+}
+
+if (string.IsNullOrEmpty(parsedArgs.TemplateFolder))
+{
+    parsedArgs.TemplateFolder = SelectTemplate(parsedArgs.TemplatesParentFolder);
+}
+
+var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{parsedArgs.TemplateFolder}\\{TplDefFile}"));
 
 var mapping = definition.Keys.ToDictionary(k => k, k => k);
 do
@@ -32,7 +41,7 @@ do
 Console.Clear();
 Console.WriteLine("Processing files...");
 
-_ = new Processor(templateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
+_ = new Processor(parsedArgs.TemplateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
 
 Console.WriteLine("Completed.");
 
