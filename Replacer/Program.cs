@@ -17,9 +17,10 @@ var deserializer = new DeserializerBuilder()
 
 var parsedArgs = parserResult.Value;
 
-if (string.IsNullOrEmpty(parsedArgs.TemplateFolder) && string.IsNullOrEmpty(parsedArgs.TemplateFolder))
-{
-    var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
+if (string.IsNullOrEmpty(parsedArgs.TemplateFolder))
+{   
+    var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(
+        $"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
 
     parsedArgs.TemplatesParentFolder = settings["templatesFolder"];
 }
@@ -29,7 +30,7 @@ if (string.IsNullOrEmpty(parsedArgs.TemplateFolder))
     parsedArgs.TemplateFolder = SelectTemplate(parsedArgs.TemplatesParentFolder);
 }
 
-var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{parsedArgs.TemplateFolder}\\{TplDefFile}"));
+var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{parsedArgs.TemplateFolder}/{TplDefFile}"));
 
 var mapping = definition.Keys.ToDictionary(k => k, k => k);
 do
@@ -54,7 +55,7 @@ static string SelectTemplate(string templatesFolderContainer, bool clear = true)
     var index = 1;
     foreach (var dir in dirs)
     {
-        if (File.Exists(Path.Combine(dir, "tpl-def.yaml")))
+        if (File.Exists(Path.Combine(dir, TplDefFile)))
         {
             templateFolders.Add(dir);
             Console.WriteLine($"  {index}) {Path.GetFileName(dir)}");
