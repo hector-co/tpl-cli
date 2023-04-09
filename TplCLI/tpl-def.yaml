@@ -1,6 +1,6 @@
 ﻿keys:
-  - Template
-  - template
+  Template: Template description
+  template: template description
 mapping:
   Template: ReplacedCore
 excludedFiles:

@@ -18,7 +18,7 @@ var deserializer = new DeserializerBuilder()
 var parsedArgs = parserResult.Value;
 
 if (string.IsNullOrEmpty(parsedArgs.TemplateFolder))
-{   
+{
     var settings = deserializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(
         $"{AppDomain.CurrentDomain.BaseDirectory}appsettings.yaml"));
 
@@ -32,14 +32,13 @@ if (string.IsNullOrEmpty(parsedArgs.TemplateFolder))
 
 var definition = deserializer.Deserialize<Definition>(File.ReadAllText($"{parsedArgs.TemplateFolder}/{TplDefFile}"));
 
-var mapping = definition.Keys.ToDictionary(k => k, k => k);
+var mapping = definition.Keys.Select(k => k.Key).ToDictionary(k => k, k => k);
 do
 {
     mapping = ReadKeyValues(definition.Keys, mapping);
 
 } while (!ConfirmValues(mapping));
 
-Console.Clear();
 Console.WriteLine("Processing files...");
 
 _ = new Processor(parsedArgs.TemplateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
@@ -74,22 +73,22 @@ static string SelectTemplate(string templatesFolderContainer, bool clear = true)
     return templateFolders[selected - 1];
 }
 
-static Dictionary<string, string> ReadKeyValues(List<string> keys, Dictionary<string, string> defaultValues)
+static Dictionary<string, string> ReadKeyValues(Dictionary<string, string> keys, Dictionary<string, string> defaultValues)
 {
     Console.Clear();
     var mapping = new Dictionary<string, string>();
-    foreach (var key in keys)
+    foreach (var kv in keys)
     {
-        Console.Write($"Introduce value for key '{key}'");
-        if (defaultValues.ContainsKey(key))
-            Console.Write($" (empty for default '{defaultValues[key]}')");
+        Console.Write($"Introduce value for '{kv.Key}'");
+        if (defaultValues.ContainsKey(kv.Key))
+            Console.Write($" ({kv.Value}, empty for default '{defaultValues[kv.Key]}')");
         Console.Write(": ");
         Console.WriteLine();
         Console.Write("> ");
         var keyValue = Console.ReadLine() ?? string.Empty;
         if (keyValue == string.Empty)
-            keyValue = defaultValues[key];
-        mapping.TryAdd(key, keyValue);
+            keyValue = defaultValues[kv.Key];
+        mapping.TryAdd(kv.Key, keyValue);
     }
     return mapping;
 }
