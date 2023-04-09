@@ -1,8 +1,6 @@
 ﻿keys:
-  Template: Template description
-  template: template description
-mapping:
-  Template: ReplacedCore
+  TemplateKey: Template key description
+  key2: key2 description
 excludedFiles:
   - tpl-def.yaml
 excludedFolders:
