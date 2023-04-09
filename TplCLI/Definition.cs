@@ -1,4 +1,4 @@
-﻿namespace Replacer;
+﻿namespace TplCLI;
 
 public class Definition
 {

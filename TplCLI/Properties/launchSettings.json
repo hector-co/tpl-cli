@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Replacer": {
+    "TplCLI": {
       "commandName": "Project",
       "commandLineArgs": ""
     }
