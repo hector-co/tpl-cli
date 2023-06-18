@@ -41,7 +41,9 @@ do
 
 Console.WriteLine("Processing files...");
 
-_ = new Processor(parsedArgs.TemplateFolder, mapping, parsedArgs.OutputFolder, definition.ExcludedFiles, definition.ExcludedFolders);
+_ = new Processor(
+    parsedArgs.TemplateFolder, mapping, Path.Combine(parsedArgs.OutputFolder, definition.EvalOutputFolder(mapping)),
+    definition.ExcludedFiles, definition.ExcludedFolders);
 
 Console.WriteLine("Completed.");
 
